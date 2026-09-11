@@ -246,8 +246,7 @@
   .gift-note{ text-align:center; font-size:0.92rem; color:var(--ink-soft); max-width:42ch; margin:0 auto; line-height:1.6;}
   .gift-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
   @media (max-width:480px){ .gift-grid{ grid-template-columns:1fr; } }
-  .gift-card-wide{ grid-column:1/-1; }
-  @media (min-width:481px){ .gift-card-wide{ max-width:calc((100% - 16px) / 2); margin:0 auto; } }
+  .gift-card-wide{ grid-column:1/-1; margin:0 auto; }
   .gift-card{
     background:var(--cream-card);
     border-radius:20px 16px 22px 18px / 18px 22px 16px 20px;
@@ -677,6 +676,19 @@
     <a class="glink" href="https://lista.camicado.com.br/suegu" target="_blank" rel="noopener">Ver lista completa →</a>
   `;
   grid.appendChild(linkCard);
+
+  // largura do card "de linha inteira" precisa bater com a dos vizinhos —
+  // mede o card normal de verdade em vez de tentar calcular via CSS
+  // (num grid de 1 coluna só, o card normal já ocupa a largura toda, então
+  // essa medida também fica certa nesse caso, sem precisar de caso especial)
+  function syncWideCardWidth(){
+    const wide = grid.querySelector('.gift-card-wide');
+    const normal = grid.querySelector('.gift-card:not(.gift-card-wide)');
+    if(!wide || !normal) return;
+    wide.style.maxWidth = normal.offsetWidth + 'px';
+  }
+  syncWideCardWidth();
+  window.addEventListener('resize', syncWideCardWidth);
 
   function showPixStep(idx){
     const gift = gifts[idx];
