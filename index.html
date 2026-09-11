@@ -299,6 +299,18 @@
   .recado-form input:focus, .recado-form textarea:focus{
     outline:none; border-color:var(--olive-mid);
   }
+  .recado-warn{
+    font-size:0.78rem; line-height:1.4; color:#a8783a;
+    background:rgba(207,154,85,0.14);
+    border:1px solid rgba(207,154,85,0.4);
+    border-radius:10px; padding:8px 10px; margin:0;
+  }
+  .recado-status{
+    font-size:0.8rem; text-align:center; line-height:1.5;
+    color:var(--ink-soft); margin:0;
+  }
+  .recado-status.status-ok{ color:var(--olive-deep-2); }
+  .recado-status.status-fail{ color:#a8783a; }
   .recado-form .btn-send{
     font-family:'Jost',sans-serif; font-size:0.74rem; letter-spacing:0.06em;
     padding:9px 12px; border-radius:20px; cursor:pointer;
@@ -551,13 +563,14 @@
 
   async function saveRecado(gift, name, message){
     try{
-      await fetch(FORMSPREE_ENDPOINT, {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
         headers: { "Accept": "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({ nome: name, recado: message, presente: gift.name, valor: gift.price }),
       });
+      return res.ok;
     }catch(err){
-      // silencioso de propósito: o convidado segue pro Pix mesmo se o envio falhar
+      return false;
     }
   }
 
@@ -608,9 +621,10 @@
       <button class="btn-presentear" type="button" data-idx="${i}">Presentear</button>
 
       <div class="choose-step" id="choose-${i}" hidden>
-        <form class="recado-form" id="recado-form-${i}">
-          <input type="text" class="rname" id="rname-${i}" placeholder="Seu nome" required maxlength="60" />
-          <textarea class="rmsg" id="rmsg-${i}" placeholder="Deixe um recado para os noivos" required maxlength="400" rows="2"></textarea>
+        <form class="recado-form" id="recado-form-${i}" novalidate>
+          <input type="text" class="rname" id="rname-${i}" placeholder="Seu nome" maxlength="60" />
+          <textarea class="rmsg" id="rmsg-${i}" placeholder="Deixe um recado para os noivos" maxlength="400" rows="2"></textarea>
+          <p class="recado-warn" id="recado-warn-${i}" hidden>Preencha seu nome e o recado antes de continuar.</p>
           <button type="submit" class="btn-send">Presentear com recado</button>
         </form>
         <button type="button" class="btn-skip" data-idx="${i}">Presentear sem recado</button>
@@ -618,6 +632,7 @@
       </div>
 
       <div class="pix-step" id="pix-${i}" hidden>
+        <p class="recado-status" id="recado-status-${i}" hidden></p>
         <div class="qr-wrap" id="qr-${i}"></div>
         <div class="pix-code-row">
           <input type="text" class="pix-code-input" id="pixcode-${i}" readonly />
@@ -701,10 +716,32 @@
     const gift = gifts[idx];
     const name = form.querySelector('.rname').value.trim();
     const message = form.querySelector('.rmsg').value.trim();
-    if(!name || !message) return;
+    const warn = document.getElementById(`recado-warn-${idx}`);
 
-    saveRecado(gift, name, message);
+    if(!name || !message){
+      if(warn) warn.hidden = false;
+      return;
+    }
+    if(warn) warn.hidden = true;
+
     showPixStep(idx);
+
+    const status = document.getElementById(`recado-status-${idx}`);
+    if(status){
+      status.hidden = false;
+      status.textContent = 'Enviando recado…';
+      status.classList.remove('status-ok', 'status-fail');
+    }
+    saveRecado(gift, name, message).then((ok)=>{
+      if(!status) return;
+      if(ok){
+        status.textContent = 'Recado enviado! Obrigado pelo carinho 💛';
+        status.classList.add('status-ok');
+      }else{
+        status.textContent = 'Não conseguimos confirmar se o recado chegou — mas o Pix abaixo funciona normalmente.';
+        status.classList.add('status-fail');
+      }
+    });
   });
 </script>
 
