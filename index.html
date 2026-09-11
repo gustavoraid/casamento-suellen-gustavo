@@ -572,15 +572,15 @@
       name: "Presente generoso", price: "R$ 1.500", amount: 1500, key: "12215189762",
       icon: '<path d="M8 20h32v22H8z"/><path d="M6 12h36v8H6z"/><path d="M24 12v30"/><path d="M24 12c-4-10-16-10-16-2c0 4 7 2 16 2z"/><path d="M24 12c4-10 16-10 16-2c0 4-7 2-16 2z"/><path d="M40 4l1.5 3.5L45 9l-3.5 1.5L40 14l-1.5-3.5L35 9l3.5-1.5z"/>',
     },
+    {
+      name: "Valor livre", price: "Você escolhe o valor", amount: null, key: "12215189762",
+      icon: '<path d="M24 40c-10-7-18-14-18-23c0-6 5-11 11-11c4 0 7 2 7 6c0-4 3-6 7-6c6 0 11 5 11 11c0 9-8 16-18 23z"/>',
+    },
   ];
 
   const PIX_MERCHANT_NAME = "SUELLEN E GUSTAVO";
   const PIX_MERCHANT_CITY = "RIO DE JANEIRO";
 
-  // ---- recados: enviados pro Formspree via formulário real mirando um iframe
-  // invisível (não é fetch — a Artifact bloqueia fetch/XHR pra domínios fora
-  // da allowlist de CDN, então um POST de navegação é o caminho que funciona
-  // sem tirar o convidado da página) ----
   // ---- recados: enviados em segundo plano pro Formspree. Fora da Artifact
   // não existe CSP bloqueando fetch, então o método padrão deles funciona. ----
   const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvkoyyek";
@@ -624,7 +624,7 @@
       tlv('26', merchantAccount) +
       tlv('52', '0000') +
       tlv('53', '986') +
-      tlv('54', gift.amount.toFixed(2)) +
+      (gift.amount != null ? tlv('54', gift.amount.toFixed(2)) : '') +
       tlv('58', 'BR') +
       tlv('59', PIX_MERCHANT_NAME.slice(0, 25)) +
       tlv('60', PIX_MERCHANT_CITY.slice(0, 15)) +
@@ -662,7 +662,7 @@
           <input type="text" class="pix-code-input" id="pixcode-${i}" readonly />
           <button type="button" class="btn-copy-code" data-idx="${i}">Copiar código</button>
         </div>
-        <p class="pix-hint">Escaneie o QR ou cole o código no Pix Copia e Cola do seu banco — o valor já vem preenchido.</p>
+        <p class="pix-hint" id="pix-hint-${i}"></p>
       </div>
     `;
     grid.appendChild(card);
@@ -686,6 +686,13 @@
 
     const code = buildPixCode(gift);
     document.getElementById(`pixcode-${idx}`).value = code;
+
+    const hint = document.getElementById(`pix-hint-${idx}`);
+    if(hint){
+      hint.textContent = gift.amount != null
+        ? 'Escaneie o QR ou cole o código no Pix Copia e Cola do seu banco — o valor já vem preenchido.'
+        : 'Escaneie o QR ou cole o código no Pix Copia e Cola do seu banco — é só informar o valor por lá antes de concluir.';
+    }
 
     const qrWrap = document.getElementById(`qr-${idx}`);
     if(window.QRCode){
