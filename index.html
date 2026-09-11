@@ -247,7 +247,7 @@
   .gift-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
   @media (max-width:480px){ .gift-grid{ grid-template-columns:1fr; } }
   .gift-card-wide{ grid-column:1/-1; }
-  @media (min-width:481px){ .gift-card-wide{ max-width:270px; margin:0 auto; } }
+  @media (min-width:481px){ .gift-card-wide{ max-width:calc((100% - 16px) / 2); margin:0 auto; } }
   .gift-card{
     background:var(--cream-card);
     border-radius:20px 16px 22px 18px / 18px 22px 16px 20px;
