@@ -159,7 +159,7 @@
 
   /* ---------- dress code ---------- */
   .dress-wrap{
-    display:flex; gap:22px; align-items:center;
+    display:flex; gap:22px; align-items:flex-start;
     background:var(--olive-deep);
     color:var(--on-olive);
     border-radius:26px 20px 30px 22px / 22px 30px 20px 26px;
@@ -168,9 +168,25 @@
   .dress-wrap .value{ font-family:'Playfair Display',serif; font-style:normal; font-size:1.5rem; margin-bottom:6px; }
   .dress-wrap p{ font-size:0.9rem; line-height:1.55; color:var(--on-olive-soft); margin:0; }
   .dress-wrap p + p{ margin-top:10px; }
-  .dress-icon{ flex:0 0 46px; }
+  .dress-wrap em{ font-style:italic; color:var(--on-olive); }
+  .dress-icon{ flex:0 0 46px; margin-top:4px; }
   .dress-icon svg{ width:46px; height:46px; }
   .dress-icon svg path,.dress-icon svg circle{ stroke:var(--on-olive); fill:none; stroke-width:2; }
+
+  .swatch-groups{
+    display:grid; grid-template-columns:1fr 1fr; gap:22px 20px;
+    margin-top:20px; padding-top:20px;
+    border-top:1px dashed rgba(246,242,227,0.35);
+  }
+  .swatch-group{ text-align:center; }
+  .swatch-group-full{ grid-column:1/-1; }
+  .swatch-group .label{ display:block; margin-bottom:12px; }
+  .swatches{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .swatch{
+    width:38px; height:38px; border-radius:50%; flex:0 0 auto;
+    border:1px solid rgba(246,242,227,0.3);
+    box-shadow:0 3px 6px rgba(20,24,8,0.25);
+  }
 
   .outfit-examples{
     display:grid; grid-template-columns:1fr 1fr; gap:16px;
@@ -405,8 +421,36 @@
       <div class="dress-icon"><svg viewBox="0 0 24 24"><path d="M8 4l4 3 4-3 3 3-3 3v10H5V10L2 7z"/></svg></div>
       <div>
         <div class="value">Casual chic</div>
-        <p>Queremos que todos se sintam confortáveis para aproveitar o dia, sem deixar a beleza de lado. Para deixar nosso almoço ainda mais bonito, sugerimos roupas lisas, leves e confortáveis, em tons de verde, cores florais e neutros como sálvia, oliva, rosa, amarelo, laranja suave, areia e bege. Fiquem à vontade para escolher a cor que mais combina com vocês! 💚</p>
-        <p>Pedimos apenas que evitem o branco, reservado aos noivos.</p>
+        <p>Queremos que todos se sintam à vontade para aproveitar o dia, sem deixar a beleza de lado. Fiquem livres para escolher o tom que mais combina com vocês! 💚</p>
+
+        <div class="swatch-groups">
+          <div class="swatch-group">
+            <span class="label on-olive">VERDES</span>
+            <div class="swatches">
+              <span class="swatch" style="background:#a9bd8c"></span>
+              <span class="swatch" style="background:#7c8a4a"></span>
+              <span class="swatch" style="background:#3d4a1f"></span>
+            </div>
+          </div>
+          <div class="swatch-group">
+            <span class="label on-olive">FLORAIS</span>
+            <div class="swatches">
+              <span class="swatch" style="background:#e08585"></span>
+              <span class="swatch" style="background:#e0965a"></span>
+              <span class="swatch" style="background:#e8bc4e"></span>
+            </div>
+          </div>
+          <div class="swatch-group swatch-group-full">
+            <span class="label on-olive">NEUTROS</span>
+            <div class="swatches">
+              <span class="swatch" style="background:#c9b896"></span>
+              <span class="swatch" style="background:#a68a6d"></span>
+              <span class="swatch" style="background:#7a5c42"></span>
+            </div>
+          </div>
+        </div>
+
+        <p>Pedimos apenas que evitem o <em>branco</em>, <em>reservado</em> aos noivos.</p>
       </div>
     </div>
 
@@ -430,7 +474,7 @@
           <path d="M24 76l-3 60h12l7-45 7 45h12l-3-60"/>
         </svg>
         <div class="olabel">Para eles</div>
-        <div class="odesc">Camisas de linho ou algodão, calça ou bermuda de alfaiataria/chino e mocassim ou tênis casual funcionam muito bem.</div>
+        <div class="odesc">Camisas de linho ou algodão, calça ou bermuda de alfaiataria/chino/sarja e mocassim ou tênis casual funcionam muito bem.</div>
       </div>
     </div>
 
